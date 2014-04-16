@@ -1,9 +1,4 @@
-import org.gradle.plugins.ide.eclipse.model.SourceFolder
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'war'
+apply from: 'webapp.gradle'
 
 group = 'com.extremasistemas'
 version = '1.0-SNAPSHOT'
@@ -20,70 +15,3 @@ dependencies {
     testCompile group: 'org.eclipse.jetty', name: 'jetty-annotations', version:'9.1.+'
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
 }
-
-// webinflib
-if (!hasProperty('webAppDirName')) {
-  project.webAppDirName = 'src/main/webapp'
-}
-sourceSets.main.output.classesDir = project.webAppDirName + '/WEB-INF/classes'
-
-task 'cleanWebinflib' << {
-  ant.delete(dir: "$webAppDirName/WEB-INF/lib")
-}
-clean.dependsOn cleanWebinflib
-
-task 'webinflib' << {
-  copy {
-    from configurations.runtime.files
-        into "$webAppDirName/WEB-INF/lib"
-    }
-}
-eclipseClasspath.dependsOn webinflib
-tasks.idea.dependsOn webinflib
-
-eclipse {
-  classpath {
-    defaultOutputDir = file("$webAppDirName/WEB-INF/classes")
-    file.whenMerged { cp ->
-      cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "build/test-classes"
-    } 
-  }
-}
-// workaround http://issues.gradle.org/browse/GRADLE-1984
-eclipse.classpath.file.beforeMerged { classpath -> classpath.entries.clear() }
-
-idea {
-
-  // see http://gradle.org/docs/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html
-  module {
-    inheritOutputDirs = false
-    outputDir = file( (project.hasProperty('webAppDirName')? webAppDirName : 'war') + '/WEB-INF/classes')
-    testOutputDir = file('build/test-classes')
-  }
-
-  project {
-      ipr.withXml { provider ->
-          // Get root node.
-          def project = provider.asNode()
-
-          def encoding = project.component.find { it.@name == 'Encoding' }
-
-          if (encoding) {
-              // Change existing node.
-              encoding.@useUTFGuessing = true
-              encoding.@native2AsciiForPropertiesFiles = false
-              encoding.@defaultCharsetForPropertiesFiles = 'UTF-8'
-              encoding.appendNode 'file', [url: 'file://$PROJECT_DIR$', charset: 'UTF-8']
-          } else {
-              // Create new node with default values.
-              project.appendNode 'component', [name: 'Encoding', useUTFGuessing: true, native2AsciiForPropertiesFiles: false, defaultCharsetForPropertiesFiles: 'UTF-8']
-          }
-      }
-  }
-}
-
-war {
-    exclude 'WEB-INF/lib/**'
-    exclude 'WEB-INF/classes/**'
-}
-
