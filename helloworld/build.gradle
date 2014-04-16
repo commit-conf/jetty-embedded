@@ -8,19 +8,13 @@ apply plugin: 'war'
 group = 'com.extremasistemas'
 version = '1.0-SNAPSHOT'
 
-description = """"""
-
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-configurations.all {
-}
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 repositories {
-
-     maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
 }
+
 dependencies {
     testCompile group: 'org.eclipse.jetty', name: 'jetty-webapp', version:'9.1.+'
     testCompile group: 'org.eclipse.jetty', name: 'jetty-annotations', version:'9.1.+'

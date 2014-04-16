@@ -3,15 +3,15 @@ package com.extrema.jetty.embedded;
 import com.google.common.base.Splitter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.webapp.Configuration.ClassList;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.util.Iterator;
 
 
 /**
- * Arranca un Jetty server embebido junto con las aplicaciones pasadas como argumento
- * en el formato domain:project-name, ej: helloworld:helloworld.
+ * Starts an embedded Jetty server with the applications passed as parameters
+ * with the format domain:project-name, e.g.: helloworld:helloworld
+ * If the project name is missing, it will be assumed to be the same as the domain name.
  */
 public final class JettyServer {
 
@@ -22,10 +22,12 @@ public final class JettyServer {
 
 		Server server = new Server(8080);
 
+        /*
         ClassList classlist = ClassList.setServerDefault(server);
         // Enable parsing of jndi-related parts of web.xml and jetty-env.xml
         classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
                 "org.eclipse.jetty.annotations.AnnotationConfiguration");
+                */
 
 
         HandlerCollection handlers = new HandlerCollection();

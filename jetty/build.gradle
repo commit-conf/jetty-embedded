@@ -1,32 +1,27 @@
+/**
+ * Tasks:
+ * gradle idea : Generate an idea project.
+ * gradle eclipse: Generate an eclipse project.
+ * gradle jetty: launch the jetty server
+ */
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.7
-group = 'com.extrema.jetty.embedded'
+group = 'com.extrema.jetty-embedded'
 version = '1.0'
-
-dependencies {
-
-	compile 'org.eclipse.jetty:jetty-server:9.1.+'    
-	compile 'org.eclipse.jetty:jetty-webapp:9.1.+'
-	compile 'org.eclipse.jetty:jetty-annotations:9.1.+'
-    compile 'ch.qos.logback:logback-classic:1.1.+'
-
-}
 
 repositories {
     mavenCentral()
 }
 
-configurations {
-    compile.exclude group: 'commons-logging'
-}
-
 dependencies {
-    // librerías comunes a todos los sistemas
+    compile 'org.eclipse.jetty:jetty-server:9.1.+'
+    compile 'org.eclipse.jetty:jetty-webapp:9.1.+'
+    compile 'org.eclipse.jetty:jetty-annotations:9.1.+'
     compile 'com.google.guava:guava:16.0.+'
-    compile 'org.slf4j:slf4j-api:1.7.+'
 }
 
 task jetty(type:JavaExec, dependsOn: compileJava) {
