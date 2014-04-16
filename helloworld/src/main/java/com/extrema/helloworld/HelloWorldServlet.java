@@ -7,12 +7,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * A demo servlet
+ */
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = { "/" })
-public class HelloWorldServlet extends HttpServlet
-{
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        request.getRequestDispatcher("/WEB-INF/html/index.html").forward(request,response);
+@WebServlet(urlPatterns = { "/foo" })
+public class HelloWorldServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.getWriter().print("<body>Hello World!</body>");
     }
+
 }

@@ -1,8 +1,12 @@
 package com.extrema.jetty.embedded;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.JettyWebXmlConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.util.Iterator;
@@ -22,25 +26,21 @@ public final class JettyServer {
 
 		Server server = new Server(8080);
 
-        /*
-        ClassList classlist = ClassList.setServerDefault(server);
-        // Enable parsing of jndi-related parts of web.xml and jetty-env.xml
-        classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
-                "org.eclipse.jetty.annotations.AnnotationConfiguration");
-                */
-
-
+        // add web applications
         HandlerCollection handlers = new HandlerCollection();
-
-		if (args != null) {
-			for (String arg : args) {
-				Iterator<String> it = Splitter.on(":").split(arg).iterator();
-				String domain = it.next();
-				String projectName = it.hasNext() ? it.next() : domain;
-				handlers.addHandler(createContext(domain, projectName));
-			}
-		}
+        Preconditions.checkArgument(args != null && args.length > 0, "Missing args: web project. Please pass a list of web projects, e.g.: JettyServer helloworld");
+        for (String arg : args) {
+            Iterator<String> it = Splitter.on(":").split(arg).iterator();
+            String domain = it.next();
+            String projectName = it.hasNext() ? it.next() : domain;
+            WebAppContext webappContext = createContext(domain, projectName);
+            handlers.addHandler(webappContext);
+        }
         server.setHandler(handlers);
+
+        // enable web 3.0 annotations
+        Configuration.ClassList classList = Configuration.ClassList.setServerDefault(server);
+        classList.addBefore(JettyWebXmlConfiguration.class.getName(), AnnotationConfiguration.class.getName());
 
         server.start();
         server.join();
@@ -51,6 +51,11 @@ public final class JettyServer {
         webapp.setContextPath("/" + domain);
         webapp.setWar("../" + projectName + "/src/main/webapp");
 
+        // fail if the web app does not deploy correctly
+        webapp.setThrowUnavailableOnStartupException(true);
+
+        // disable directory listing
+        webapp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         return webapp;
 	}
 

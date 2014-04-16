@@ -18,9 +18,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.eclipse.jetty:jetty-server:9.1.+'
-    compile 'org.eclipse.jetty:jetty-webapp:9.1.+'
     compile 'org.eclipse.jetty:jetty-annotations:9.1.+'
+    compile 'org.eclipse.jetty:jetty-plus:9.1.+'
     compile 'com.google.guava:guava:16.0.+'
 }
 
