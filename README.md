@@ -1,6 +1,6 @@
 #jetty-embedded
 
-This project will configure and deploy an exploded WAR webapp inside an embedded jetty. For a full explanation including other alternative solutions, you should <a href="http://blog.extrema.com/lightweight-java-webapp">read the blog post</a>.
+This project will configure and deploy an exploded WAR webapp inside an embedded jetty. For a full explanation including other alternative solutions, you should <a href="http://blog.extrema-sistemas.com/lightweight-java-webapp/">read the blog post</a>.
 
 The project is composed of an embedded jetty and a deployable web application using web 3.0 annotations.
 
