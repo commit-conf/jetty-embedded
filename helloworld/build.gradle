@@ -3,7 +3,7 @@ System.setProperty("jsse.enableSNIExtension", "false");
 
 apply from: 'https://raw.githubusercontent.com/icoloma/gradle-plugins/master/webapp.gradle'
 
-group = 'com.extremasistemas'
+group = 'com.mycompany'
 version = '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.7
